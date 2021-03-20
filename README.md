@@ -1,4 +1,4 @@
-# Advanced data processer
+# Advanced data processor
 
 目标是做一个简单好用的数据格式转换器，当前仅实现了 voc 格式的转换
 
@@ -24,7 +24,7 @@ pip install -r requirements.txt
 import pandas as pd
 
 from bbox import BBox2D
-from processer import DataProcessor
+from processor import DataProcessor
 from transfer import VocTransfer
 from private import *
 
