@@ -3,12 +3,15 @@ import os
 
 from tqdm import tqdm
 from transfer import BaseTransfer
+from bbox import BBox2D
+from utils import draw, im_show
 
-from typing import Type, List
+from typing import Type, List, Tuple
 
 
 class DataProcessor:
     root = ''
+    debug = False
 
     def __init__(self, transfer: Type[BaseTransfer], output='output'):
         self.transfer = transfer(store=output)
@@ -16,11 +19,11 @@ class DataProcessor:
     def set_data_root_path(self, path: str):
         self.root = path
 
-    def addData(self, data_path: str, details: List[dict], **kwargs):
+    def addData(self, data_path: str, details: List[Tuple[str, BBox2D]], **kwargs):
         """
         Load data in dataset.
 
-        :param details: The detail of the data. need name(label) and bnd_box
+        :param details: The detail of the data. need name(label) and BBox2D
         :param usage: Your usage of this data (default train)
         :param data_path: the path where images exists
         :return: None
@@ -55,6 +58,10 @@ class DataProcessor:
 
                 bar.set_description(f"Processing: {data['name']}")
                 self.addData(data['name'], data['details'])
+
+                if self.debug:
+                    img = draw(data['details'], os.path.join(self.root, data['name']), (0, 255, 0))
+                    im_show(img)
 
                 if bar.n == size:
                     break

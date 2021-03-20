@@ -1,4 +1,6 @@
-from typing import List
+from bbox import BBox2D
+
+from typing import List, Tuple
 
 
 class BaseTransfer:
@@ -8,5 +10,5 @@ class BaseTransfer:
         self.store = store
         self.database = database
 
-    def addData(self, data_path: str, details: List[dict], **kwargs):
+    def addData(self, data_path: str, details: List[Tuple[str, BBox2D]], **kwargs):
         pass
