@@ -10,6 +10,34 @@
 
 
 
+## 接口说明
+
+此模块对标注的统一描述方式（details）目前为：List[dict] 形式
+
+在 `data_loader` 处理每行 `csv` 时，你需要返回这种中间形式
+
+```json
+{
+    'name': '<图片名>.jpg',
+    'details': [
+        {
+            'name': '<分类类别>',
+            'bndbox': {
+                'xmin': xmin,
+                'ymin': ymin,
+                'xmax': xmax,
+                'ymax': ymax
+            }
+        },
+        ...  // 如果有多个框，在此处添加
+    ]
+}
+```
+
+
+
+
+
 ## 使用方式
 安装
 ```bash
@@ -25,8 +53,6 @@ import pandas as pd
 
 from bbox import BBox2D
 from processor import DataProcessor
-from transfer import VocTransfer
-from private import *
 
 
 class MyProcessor(DataProcessor):
@@ -40,22 +66,26 @@ class MyProcessor(DataProcessor):
                     'xmin': bbox.x1,
                     'ymin': bbox.y1,
                     'xmax': bbox.x2,
-                    'ymax': bbox.y2
+                    'ymax': bbox.y2,
                 }
             }]
         }
 
-
-if __name__ == '__main__':
-    train_csv = csv_path
-
-    dp = MyProcessor(VocTransfer, output='output')
-    dp.set_data_root_path(data_root_path)
-
-    dp.load_from_csv(train_csv, stop_at=0)
 ```
 
 然后就可以通过不同的 `Transfer` 进行数据转换了
+
+```python
+from transfer import VocTransfer
+from myprocessor import MyProcessor
+
+if __name__ == '__main__':
+    train_csv = 'lib/train.csv'
+
+    dp = MyProcessor(VocTransfer, output='output')
+    dp.set_data_root_path('lib/images')
+    dp.load_from_csv(train_csv, stop_at=1000)
+```
 
 
 
