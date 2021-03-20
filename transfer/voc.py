@@ -15,7 +15,7 @@ class VocTransfer(BaseTransfer):
     xml_parser = xml2dict
     v_template = xml_parser.parse(voc_template_main)
 
-    def __init__(self, database='Automatic generated', store='output', overwrite=True):
+    def __init__(self, database='Automatic generated', store='output', size=(448, 448, 3), overwrite=True):
         super().__init__(database, store, overwrite)
 
         logging.info('[+] Transfer selected: VocTransfer')
@@ -33,6 +33,11 @@ class VocTransfer(BaseTransfer):
 
         # Init template
         self.v_template['annotation']['source']['database'] = database
+        self.v_template['annotation']['size'] = {
+            'width': size[0],
+            'height': size[1],
+            'depth': size[2]
+        }
 
     def addData(self, data_path: str, details: List[Tuple[str, BBox2D]], usage='train'):
         """
@@ -72,6 +77,8 @@ class VocTransfer(BaseTransfer):
             if type(data['annotation']['object']) is dict:
                 data['annotation']['object'] = [data['annotation']['object']]
             data['annotation']['object'].append(parsed_objects)
+
+        data['annotation']['filename'] = basename + '.jpg'
 
         # Save data
         xml_cont = dict2xml(data, indent='    ')

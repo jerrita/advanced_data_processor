@@ -13,8 +13,8 @@ class DataProcessor:
     root = ''
     debug = False
 
-    def __init__(self, transfer: Type[BaseTransfer], output='output'):
-        self.transfer = transfer(store=output)
+    def __init__(self, transfer: Type[BaseTransfer], size=(448, 448, 3), output='output'):
+        self.transfer = transfer(store=output, size=size)
 
     def set_data_root_path(self, path: str):
         self.root = path
