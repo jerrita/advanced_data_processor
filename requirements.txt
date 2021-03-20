@@ -1,0 +1,5 @@
+python-xml2dict
+dict2xml~=1.7.0
+pandas~=1.2.3
+numpy~=1.19.5
+bbox~=0.9.2
