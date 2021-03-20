@@ -16,7 +16,7 @@
 
 在 `data_loader` 处理每行 `csv` 时，你需要返回这种中间形式
 
-```json
+```python
 {
     'name': '<图片名>.jpg',
     'details': [
