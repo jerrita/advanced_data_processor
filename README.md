@@ -12,7 +12,7 @@
 
 ## 接口说明
 
-此模块对标注的统一描述方式（details）目前为：List[dict] 形式
+此模块对标注的统一描述方式（details）目前为：List[Tuple[str, BBox2D]] 形式
 
 在 `data_loader` 处理每行 `csv` 时，你需要返回这种中间形式
 
@@ -20,21 +20,10 @@
 {
     'name': '<图片名>.jpg',
     'details': [
-        {
-            'name': '<分类类别>',
-            'bndbox': {
-                'xmin': xmin,
-                'ymin': ymin,
-                'xmax': xmax,
-                'ymax': ymax
-            }
-        },
-        ...  // 如果有多个框，在此处添加
+        ('<分类>', BBox2D([x, y, w, h], mode=XYWH))
     ]
 }
 ```
-
-
 
 
 
@@ -51,26 +40,18 @@ pip install -r requirements.txt
 ```python
 import pandas as pd
 
-from bbox import BBox2D
+from bbox import BBox2D, XYWH
 from processor import DataProcessor
 
 
 class MyProcessor(DataProcessor):
     def data_loader(self, db: pd.DataFrame) -> dict:
-        bbox = BBox2D(eval(db['bbox']))
+        bbox = BBox2D(eval(db['bbox']), mode=XYWH)
+
         return {
             'name': db['image_id'] + '.jpg',
-            'details': [{
-                'name': db['source'],
-                'bndbox': {
-                    'xmin': bbox.x1,
-                    'ymin': bbox.y1,
-                    'xmax': bbox.x2,
-                    'ymax': bbox.y2,
-                }
-            }]
+            'details': [(db['source'], bbox)]
         }
-
 ```
 
 然后就可以通过不同的 `Transfer` 进行数据转换了
