@@ -44,7 +44,7 @@ class DataProcessor:
         """
 
         df = pd.read_csv(name)
-        size = df.size
+        size = df.shape[0]
 
         if stop_at:
             size = min(stop_at, size)

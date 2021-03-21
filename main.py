@@ -6,4 +6,4 @@ if __name__ == '__main__':
 
     dp = MyProcessor(VocTransfer, output='output')
     dp.set_data_root_path('lib/images')
-    dp.load_from_csv(train_csv, stop_at=1000)
+    dp.load_from_csv(train_csv, stop_at=0)
