@@ -63,10 +63,10 @@ class VocTransfer(BaseTransfer):
             obj_template.update({
                 'name': detail[0],
                 'bndbox': {
-                    'xmin': detail[1].x1,
-                    'ymin': detail[1].y1,
-                    'xmax': detail[1].x2,
-                    'ymax': detail[1].y2
+                    'xmin': int(detail[1].x1),
+                    'ymin': int(detail[1].y1),
+                    'xmax': int(detail[1].x2),
+                    'ymax': int(detail[1].y2)
                 }
             })
             parsed_objects.append(obj_template)
