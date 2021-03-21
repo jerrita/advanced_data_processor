@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import logging
 
 from tqdm import tqdm
 from transfer import BaseTransfer
@@ -48,6 +49,9 @@ class DataProcessor:
         if stop_at:
             size = min(stop_at, size)
 
+        # preprocessing and merge
+        logging.info('[+] Preprocessing start.')
+        db = {}
         with tqdm(total=size) as bar:
             for index, row in df.iterrows():
                 data = self.data_loader(row)
@@ -57,11 +61,22 @@ class DataProcessor:
                     raise ValueError('Please overwrite your data_loader ^_^')
 
                 bar.set_description(f"Processing: {data['name']}")
-                self.addData(data['name'], data['details'])
-
-                if self.debug:
-                    img = draw(data['details'], os.path.join(self.root, data['name']), (0, 255, 0))
-                    im_show(img)
+                if data['name'] in db:
+                    db[data['name']].append(*data['details'])
+                else:
+                    db[data['name']] = data['details']
 
                 if bar.n == size:
                     break
+
+        logging.info('[+] Done. Starting transfer.')
+        bar = tqdm(db)
+        for instance in bar:
+            bar.set_description(f"Processing: {instance}")
+
+            if self.debug:
+                img = draw(db[instance], os.path.join(self.root, instance), (0, 255, 0))
+                im_show(img)
+
+            self.addData(instance, db[instance])
+        logging.info('[+] Done.')
